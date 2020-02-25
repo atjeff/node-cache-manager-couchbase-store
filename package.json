@@ -1,0 +1,17 @@
+{
+    "name": "node-cache-manager-couchbase-store",
+    "version": "0.0.1",
+    "main": "index.js",
+    "author": "atjeff",
+    "license": "MIT",
+    "private": false,
+    "dependencies": {
+        "couchbase": "^3.0.0"
+    },
+    "devDependencies": {
+        "@types/cache-manager": "^2.10.1",
+        "@types/couchbase": "^2.4.1",
+        "prettier": "^1.19.1",
+        "typescript": "^3.8.2"
+    }
+}
