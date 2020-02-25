@@ -11,11 +11,13 @@ export class CouchbaseClient implements Store {
     cluster: Cluster;
     bucket: Promisify<Bucket, any>;
     collection: any;
+    config: { ttl: number; [x: string]: any }
 
     constructor(config: CouchbaseConnectionConfig) {
-        this.cluster = new Cluster(config.url, config as any);
+        this.config = config as any;
+        this.cluster = new Cluster(this.config?.url, this.config as any);
 
-        this.bucket = (this.cluster as any).bucket(config.bucket.name, config.bucket.password);
+        this.bucket = (this.cluster as any).bucket(this.config?.bucket?.name, this.config?.bucket?.password);
         this.collection = (this.bucket as any).defaultCollection();
     }
 
@@ -30,15 +32,13 @@ export class CouchbaseClient implements Store {
         }
     }
 
-    async set<T = any>(key: string, value, options): Promise<T> {
+    async set<T = any>(key: string, value: any, options): Promise<T> {
         if (this.isConnected()) {
             const insertOptions: InsertOptions = options;
 
-            if (options.ttl) {
-                insertOptions.expiry = options.ttl;
-            }
+            insertOptions.expiry = options.ttl || this.config.ttl;
 
-            return this.collection.insert(key, insertOptions);
+            return this.collection.insert(key, value, insertOptions);
         }
     }
 
@@ -51,7 +51,6 @@ export class CouchbaseClient implements Store {
     isConnected(): boolean {
         return [
             (this.bucket as any)?._conn?._connected,
-            (this.cluster as any)?._clusterConn,
             (this.collection as any)?._conn?._connected
         ].some(Boolean);
     }
