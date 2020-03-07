@@ -19,7 +19,7 @@ export class CouchbaseClient implements Store {
         this.collection = (this.bucket as any).defaultCollection();
     }
 
-    async get<T = any>(key: string): Promise<T> {
+    async get<T = any>(key: string): Promise<T | null | undefined> {
         if (this.isConnected()) {
             try {
                 return (await this.collection.get(key)).value;
@@ -29,7 +29,7 @@ export class CouchbaseClient implements Store {
         }
     }
 
-    async set<T = any>(key: string, value: T, options?: SetOptions): Promise<T> {
+    async set<T = any>(key: string, value: T, options?: SetOptions): Promise<T | undefined> {
         if (this.isConnected()) {
             const insertOptions: InsertOptions = this.getSetOptions(value, options);
 
@@ -37,13 +37,13 @@ export class CouchbaseClient implements Store {
         }
     }
 
-    async del<T = any>(key: string): Promise<T> {
+    async del<T = any>(key: string): Promise<T | undefined> {
         if (this.isConnected()) {
             return await this.collection.remove(key);
         }
     }
 
-    async upsert<T = any>(key: string, value: T, options?: UpdateOptions): Promise<T> {
+    async upsert<T = any>(key: string, value: T, options?: UpdateOptions): Promise<T | undefined> {
         if (this.isConnected()) {
             const insertOptions: InsertOptions = this.getSetOptions(value, options);
 
@@ -55,7 +55,7 @@ export class CouchbaseClient implements Store {
         return [(this.bucket as any)._conn?._connected, this.collection?._conn?._connected].every(Boolean);
     }
 
-    getSetOptions<T = any>(value: T, options: SetOptions): InsertOptions {
+    getSetOptions<T = any>(value: T, options: SetOptions | undefined): InsertOptions {
         const insertOptions: InsertOptions = options || {};
         const ttlFactory = options?.ttl || this.config.ttl;
 

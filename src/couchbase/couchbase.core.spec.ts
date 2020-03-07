@@ -1,6 +1,5 @@
 import { Cluster } from 'couchbase';
 import { CouchbaseClient, store } from './couchbase.core';
-import { CouchbaseStoreConfig } from './models/couchbase-store-config.model';
 
 jest.mock('couchbase');
 
@@ -48,7 +47,7 @@ describe('CouchbaseClient', () => {
         });
 
         it('should pass the name and config to Cluster', () => {
-            const mockConfig: Partial<CouchbaseStoreConfig> = {
+            const mockConfig = {
                 url: 'test',
                 bucket: {
                     name: 'bucket',
@@ -63,7 +62,7 @@ describe('CouchbaseClient', () => {
         });
 
         it('should pass the bucket name and password to bucket', () => {
-            const mockConfig: Partial<CouchbaseStoreConfig> = {
+            const mockConfig = {
                 url: 'test',
                 bucket: {
                     name: 'bucket',

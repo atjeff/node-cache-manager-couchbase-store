@@ -9,6 +9,7 @@
       "allowJs": false,
       "noEmitOnError": true,
       "newLine": "lf",
+      "strict": true,
 
       /* Build Options */
       "incremental": true,
