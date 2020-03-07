@@ -5,13 +5,23 @@
     "author": "atjeff",
     "license": "MIT",
     "private": false,
+    "scripts": {
+        "dev": "tsc --watch",
+        "build": "tsc",
+        "lint": "prettier --list-different 'src/**/*.ts'",
+        "format": "prettier --write 'src/**/*.ts'",
+        "test": "jest --runInBand"
+    },
     "dependencies": {
         "couchbase": "^3.0.0"
     },
     "devDependencies": {
         "@types/cache-manager": "^2.10.1",
         "@types/couchbase": "^2.4.1",
+        "@types/jest": "^25.1.4",
+        "jest": "^25.1.0",
         "prettier": "^1.19.1",
+        "ts-jest": "^25.2.1",
         "typescript": "^3.8.2"
     }
 }

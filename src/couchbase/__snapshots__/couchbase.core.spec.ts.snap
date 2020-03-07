@@ -1,0 +1,177 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CouchbaseClient Couchbase Methods del should call collection.del 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "test",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`CouchbaseClient Couchbase Methods get should call collection.get 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "test",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`CouchbaseClient Couchbase Methods set should call collection.set with the result of getSetOptions 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "test",
+      Object {
+        "testObj": true,
+      },
+      Object {
+        "expiry": 5,
+        "ttl": [Function],
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`CouchbaseClient Couchbase Methods set should call getSetOptions with the passed in value and options 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "testObj": true,
+      },
+      Object {
+        "expiry": 5,
+        "ttl": 5,
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": Object {
+        "expiry": 5,
+        "ttl": 5,
+      },
+    },
+  ],
+}
+`;
+
+exports[`CouchbaseClient Couchbase Methods upsert should call collection.upsert 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "test",
+      Object {
+        "testObj": true,
+      },
+      Object {
+        "expiry": undefined,
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`CouchbaseClient Couchbase Methods upsert should call collection.upsert with the result of getSetOptions 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "test",
+      Object {
+        "testObj": true,
+      },
+      Object {
+        "expiry": 5,
+        "ttl": [Function],
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`CouchbaseClient Couchbase Methods upsert should call getSetOptions with the passed in value and options 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "testObj": true,
+      },
+      Object {
+        "expiry": 5,
+        "ttl": 5,
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": Object {
+        "expiry": 5,
+        "ttl": 5,
+      },
+    },
+  ],
+}
+`;
+
+exports[`CouchbaseClient getSetOptions should set the ttl function result if it exists 1`] = `
+Object {
+  "expiry": 5,
+  "ttl": [MockFunction] {
+    "calls": Array [
+      Array [
+        null,
+      ],
+    ],
+    "results": Array [
+      Object {
+        "type": "return",
+        "value": 5,
+      },
+    ],
+  },
+}
+`;
+
+exports[`CouchbaseClient getSetOptions should set the ttl value if it exists 1`] = `
+Object {
+  "expiry": 12,
+  "ttl": 12,
+}
+`;

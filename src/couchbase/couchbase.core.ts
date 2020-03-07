@@ -10,7 +10,7 @@ export class CouchbaseClient implements Store {
     cluster: Cluster;
     bucket: Promisify<Bucket, any>;
     collection: any;
-    config: CouchbaseStoreConfig
+    config: CouchbaseStoreConfig;
 
     constructor(config: CouchbaseStoreConfig) {
         this.config = config;
@@ -53,19 +53,16 @@ export class CouchbaseClient implements Store {
     }
 
     isConnected(): boolean {
-        return [
-            (this.bucket as any)?._conn?._connected,
-            (this.collection as any)?._conn?._connected
-        ].some(Boolean);
+        return [(this.bucket as any)._conn?._connected, this.collection?._conn?._connected].every(Boolean);
     }
 
-    getSetOptions<T = any>(value: T, options: SetOptions): InsertOptions  {
+    getSetOptions<T = any>(value: T, options: SetOptions): InsertOptions {
         const insertOptions: InsertOptions = options || {};
-            const ttlFactory = options?.ttl || this.config.ttl;
+        const ttlFactory = options?.ttl || this.config.ttl;
 
-            insertOptions.expiry = typeof ttlFactory === 'function' ? ttlFactory(value) : ttlFactory;
+        insertOptions.expiry = typeof ttlFactory === 'function' ? ttlFactory(value) : ttlFactory;
 
-            return insertOptions;
+        return insertOptions;
     }
 }
 
