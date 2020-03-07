@@ -1,6 +1,5 @@
-import type { Store } from 'cache-manager';
-import { Cluster } from 'couchbase';
-import type { Bucket, InsertOptions } from 'couchbase';
+import { Store } from 'cache-manager';
+import { Bucket, Cluster, InsertOptions } from 'couchbase';
 import { Promisify } from '../types/promisify.model';
 import { SetOptions, UpdateOptions } from './models/couchbase-operations.model';
 import { CouchbaseStoreConfig } from './models/couchbase-store-config.model';
