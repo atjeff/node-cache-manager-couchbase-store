@@ -1,5 +1,10 @@
 # Node Cache Manager store for Couchbase
 
+[![npm version](https://img.shields.io/npm/v/node-cache-manager-couchbase-store.svg?style=flat-square)](https://www.npmjs.com/package/node-cache-manager-couchbase-store)
+[![npm downloads](https://img.shields.io/npm/dm/node-cache-manager-couchbase-store.svg?style=flat-square)](https://www.npmjs.com/package/node-cache-manager-couchbase-store)
+![npm bundle size](https://img.shields.io/bundlephobia/min/node-cache-manager-couchbase-store)
+![Codecov branch](https://img.shields.io/codecov/c/github/atjeff/node-cache-manager-couchbase-store/master)
+
 ## Installation 
 ```
 npm install node-cache-manager-store-couchbase --save
