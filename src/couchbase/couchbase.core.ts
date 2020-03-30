@@ -6,17 +6,22 @@ import { CouchbaseStoreConfig } from './models/couchbase-store-config.model';
 
 // https://issues.couchbase.com/browse/JSCBC-686
 export class CouchbaseClient implements Store {
-    cluster: Cluster;
-    bucket: Promisify<Bucket, any>;
+    cluster?: Cluster;
+    bucket?: Promisify<Bucket, any>;
     collection: any;
     config: CouchbaseStoreConfig;
 
     constructor(config: CouchbaseStoreConfig) {
         this.config = config;
-        this.cluster = new Cluster(this.config?.url, this.config as any);
 
-        this.bucket = (this.cluster as any).bucket(this.config?.bucket?.name, this.config?.bucket?.password);
-        this.collection = (this.bucket as any).defaultCollection();
+        try {
+            this.cluster = new Cluster(this.config?.url, this.config as any);
+
+            this.bucket = (this.cluster as any).bucket(this.config?.bucket?.name, this.config?.bucket?.password);
+            this.collection = (this.bucket as any).defaultCollection();
+        } catch (e) {
+            console.log('Unable to connect to couchbase. ', e);
+        }
     }
 
     async get<T = any>(key: string): Promise<T | null | undefined> {
@@ -52,7 +57,7 @@ export class CouchbaseClient implements Store {
     }
 
     isConnected(): boolean {
-        return [(this.bucket as any)._conn?._connected, this.collection?._conn?._connected].every(Boolean);
+        return [(this.bucket as any)?._conn?._connected, this.collection?._conn?._connected].every(Boolean);
     }
 
     getSetOptions<T = any>(value: T, options: SetOptions | undefined): InsertOptions {
