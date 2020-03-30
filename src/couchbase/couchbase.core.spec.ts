@@ -5,23 +5,23 @@ jest.mock('couchbase');
 
 const collectionMock = jest.fn().mockImplementation(() => ({
     _conn: {
-        _connected: null
+        _connected: null,
     },
     get: jest.fn(),
     insert: jest.fn(),
     remove: jest.fn(),
-    upsert: jest.fn()
+    upsert: jest.fn(),
 }));
 
 const bucketMock = jest.fn().mockImplementation(() => ({
     _conn: {
-        _connected: null
+        _connected: null,
     },
-    defaultCollection: collectionMock
+    defaultCollection: collectionMock,
 }));
 
 const clusterMock = jest.fn().mockImplementation(() => ({
-    bucket: bucketMock
+    bucket: bucketMock,
 }));
 
 describe('CouchbaseClient', () => {
@@ -51,8 +51,8 @@ describe('CouchbaseClient', () => {
                 url: 'test',
                 bucket: {
                     name: 'bucket',
-                    password: 'bucketPassword'
-                }
+                    password: 'bucketPassword',
+                },
             };
             (Cluster as jest.MockedClass<typeof Cluster>).mockImplementation(clusterMock);
 
@@ -66,8 +66,8 @@ describe('CouchbaseClient', () => {
                 url: 'test',
                 bucket: {
                     name: 'bucket',
-                    password: 'bucketPassword'
-                }
+                    password: 'bucketPassword',
+                },
             };
             (Cluster as jest.MockedClass<typeof Cluster>).mockImplementation(clusterMock);
 
@@ -237,28 +237,28 @@ describe('CouchbaseClient', () => {
                 {
                     bucket: true,
                     collection: true,
-                    result: true
+                    result: true,
                 },
                 {
                     bucket: true,
                     collection: false,
-                    result: false
+                    result: false,
                 },
                 {
                     bucket: false,
                     collection: true,
-                    result: false
+                    result: false,
                 },
                 {
                     bucket: false,
                     collection: false,
-                    result: false
+                    result: false,
                 },
                 {
                     bucket: undefined,
                     collection: undefined,
-                    result: false
-                }
+                    result: false,
+                },
             ].forEach(({ bucket, collection, result }) => {
                 (couchbaseClient.bucket as any)._conn._connected = bucket;
                 couchbaseClient.collection._conn._connected = collection;

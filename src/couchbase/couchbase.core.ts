@@ -71,5 +71,5 @@ export class CouchbaseClient implements Store {
 }
 
 export const store = {
-    create: (config: CouchbaseStoreConfig) => new CouchbaseClient(config)
+    create: (config: CouchbaseStoreConfig) => new CouchbaseClient(config),
 };
