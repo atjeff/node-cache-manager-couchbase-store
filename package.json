@@ -13,7 +13,7 @@
         "test": "jest --runInBand"
     },
     "dependencies": {
-        "couchbase": "^3.0.0"
+        "couchbase": "3.0.0"
     },
     "devDependencies": {
         "@types/cache-manager": "^2.10.2",

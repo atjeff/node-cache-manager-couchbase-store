@@ -62,7 +62,9 @@ export class CouchbaseClient implements Store {
 
     getSetOptions<T = any>(value: T, options: SetOptions | undefined): InsertOptions {
         const insertOptions: InsertOptions = options || {};
-        const ttlFactory = options?.ttl || this.config.ttl;
+
+        // We want to allow value of zero
+        const ttlFactory = typeof options?.ttl !== 'undefined' ? options.ttl : this.config.ttl;
 
         insertOptions.expiry = typeof ttlFactory === 'function' ? ttlFactory(value) : ttlFactory;
 
