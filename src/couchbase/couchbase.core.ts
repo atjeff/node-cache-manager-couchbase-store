@@ -1,24 +1,24 @@
 import { Store } from 'cache-manager';
-import { Bucket, Cluster, InsertOptions } from 'couchbase';
-import { Promisify } from '../types/promisify.model';
-import { SetOptions, UpdateOptions } from './models/couchbase-operations.model';
+import { connect } from 'couchbase';
+import { InsertOptions, SetOptions, UpdateOptions } from './models/couchbase-operations.model';
 import { CouchbaseStoreConfig } from './models/couchbase-store-config.model';
+export * from 'couchbase';
 
-// https://issues.couchbase.com/browse/JSCBC-686
 export class CouchbaseClient implements Store {
     cluster?: Cluster;
-    bucket?: Promisify<Bucket, any>;
-    collection: any;
+    bucket?: Bucket;
+    collection!: Collection;
     config: CouchbaseStoreConfig;
 
     constructor(config: CouchbaseStoreConfig) {
         this.config = config;
 
         try {
-            this.cluster = new Cluster(this.config?.url, this.config as any);
-
-            this.bucket = (this.cluster as any).bucket(this.config?.bucket?.name, this.config?.bucket?.password);
-            this.collection = (this.bucket as any).defaultCollection();
+            connect(this.config?.url, this.config as any).then((cluster) => {
+                this.cluster = cluster;
+                this.bucket = this.cluster.bucket(this.config?.bucket?.name);
+                this.collection = this.bucket.defaultCollection();
+            });
         } catch (e) {
             console.log('Unable to connect to couchbase. ', e);
         }
@@ -27,14 +27,14 @@ export class CouchbaseClient implements Store {
     async get<T = any>(key: string): Promise<T | null | undefined> {
         if (this.isConnected()) {
             try {
-                return (await this.collection.get(key)).value;
+                return (await this.collection.get(key)).content;
             } catch (e) {
                 return null;
             }
         }
     }
 
-    async set<T = any>(key: string, value: T, options?: SetOptions): Promise<T | undefined> {
+    async set<T = any>(key: string, value: T, options?: SetOptions): Promise<MutationResult | void> {
         if (this.isConnected()) {
             const insertOptions: InsertOptions = this.getSetOptions(value, options);
 
@@ -42,22 +42,22 @@ export class CouchbaseClient implements Store {
         }
     }
 
-    async del<T = any>(key: string): Promise<T | undefined> {
+    async del<T = any>(key: string): Promise<RemoveResult | void> {
         if (this.isConnected()) {
             return await this.collection.remove(key);
         }
     }
 
-    async upsert<T = any>(key: string, value: T, options?: UpdateOptions): Promise<T | undefined> {
+    async upsert<T = any>(key: string, value: T, options?: UpdateOptions): Promise<MutationResult | void> {
         if (this.isConnected()) {
             const insertOptions: InsertOptions = this.getSetOptions(value, options);
 
-            return await this.collection.upsert(key, value, insertOptions);
+            return this.collection.upsert(key, value, insertOptions);
         }
     }
 
     isConnected(): boolean {
-        return [(this.bucket as any)?._conn?._connected, this.collection?._conn?._connected].every(Boolean);
+        return [(this.bucket as any)?._conn?._connected, (this.collection as any)?._conn?._connected].every(Boolean);
     }
 
     getSetOptions<T = any>(value: T, options: SetOptions | undefined): InsertOptions {
@@ -66,7 +66,7 @@ export class CouchbaseClient implements Store {
         // We want to allow value of zero
         const ttlFactory = typeof options?.ttl !== 'undefined' ? options.ttl : this.config.ttl;
 
-        insertOptions.expiry = typeof ttlFactory === 'function' ? ttlFactory(value) : ttlFactory;
+        insertOptions.timeout = typeof ttlFactory === 'function' ? ttlFactory(value) : ttlFactory;
 
         return insertOptions;
     }

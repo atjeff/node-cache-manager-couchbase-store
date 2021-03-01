@@ -1,5 +1,8 @@
 import { CachingConfig } from 'cache-manager';
-import { InsertOptions, UpsertOptions } from 'couchbase';
+
+export type InsertOptions = Partial<{ timeout?: number }>;
+
+export type UpsertOptions = Partial<{ timeout?: number }>;
 
 export type SetOptions = CachingConfig & InsertOptions;
 
