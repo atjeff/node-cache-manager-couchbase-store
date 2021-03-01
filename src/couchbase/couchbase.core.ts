@@ -2,7 +2,6 @@ import { Store } from 'cache-manager';
 import { connect } from 'couchbase';
 import { InsertOptions, SetOptions, UpdateOptions } from './models/couchbase-operations.model';
 import { CouchbaseStoreConfig } from './models/couchbase-store-config.model';
-export * from 'couchbase';
 
 export class CouchbaseClient implements Store {
     cluster?: Cluster;
