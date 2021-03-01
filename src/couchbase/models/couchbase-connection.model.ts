@@ -1,12 +1,10 @@
-import { ClusterConstructorOptions } from 'couchbase';
-
 export interface CouchbaseConnectionConfig {
     url: string;
     username?: string;
     password?: string;
     bucket: CouchbaseBucketConfig;
     sync?: boolean;
-    options?: ClusterConstructorOptions;
+    options?: unknown;
     mock?: boolean;
 }
 

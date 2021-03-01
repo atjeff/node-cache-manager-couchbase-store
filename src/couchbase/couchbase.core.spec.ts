@@ -1,4 +1,4 @@
-import { Cluster } from 'couchbase';
+import couchbase from 'couchbase';
 import { CouchbaseClient, store } from './couchbase.core';
 
 jest.mock('couchbase');
@@ -20,33 +20,36 @@ const bucketMock = jest.fn().mockImplementation(() => ({
     defaultCollection: collectionMock,
 }));
 
-const clusterMock = jest.fn().mockImplementation(() => ({
+const clusterMock = {
     bucket: bucketMock,
-}));
+};
 
 describe('CouchbaseClient', () => {
+    let connectSpy: any;
+
+    beforeEach(() => {
+        connectSpy = jest.spyOn(couchbase, 'connect').mockResolvedValue(clusterMock as any);
+    });
+
     afterEach(() => jest.clearAllMocks());
 
     describe('constructor', () => {
-        it('should be defined', () => {
-            (Cluster as jest.MockedClass<typeof Cluster>).mockImplementation(clusterMock);
-
+        it('should be defined', async () => {
             const couchbaseClient = new CouchbaseClient(undefined as any);
 
             expect(couchbaseClient).toBeDefined();
             expect(couchbaseClient).toBeInstanceOf(CouchbaseClient);
         });
 
-        it('should set the config to the instance', () => {
+        it('should set the config to the instance', async () => {
             const mockConfig: any = { test: 2 };
-            (Cluster as jest.MockedClass<typeof Cluster>).mockImplementation(clusterMock);
 
             const couchbaseClient = new CouchbaseClient(mockConfig as any);
 
             expect(couchbaseClient.config).toEqual(mockConfig);
         });
 
-        it('should pass the name and config to Cluster', () => {
+        it('should pass the name and config to connect', async () => {
             const mockConfig = {
                 url: 'test',
                 bucket: {
@@ -54,14 +57,13 @@ describe('CouchbaseClient', () => {
                     password: 'bucketPassword',
                 },
             };
-            (Cluster as jest.MockedClass<typeof Cluster>).mockImplementation(clusterMock);
 
             new CouchbaseClient(mockConfig as any);
 
-            expect(clusterMock).toHaveBeenCalledWith(mockConfig.url, mockConfig);
+            expect(connectSpy).toHaveBeenCalledWith(mockConfig.url, mockConfig);
         });
 
-        it('should pass the bucket name and password to bucket', () => {
+        it('should pass the bucket name and password to bucket', async () => {
             const mockConfig = {
                 url: 'test',
                 bucket: {
@@ -69,20 +71,19 @@ describe('CouchbaseClient', () => {
                     password: 'bucketPassword',
                 },
             };
-            (Cluster as jest.MockedClass<typeof Cluster>).mockImplementation(clusterMock);
 
-            new CouchbaseClient(mockConfig as any);
+            await new CouchbaseClient(mockConfig as any);
 
-            expect(bucketMock).toHaveBeenCalledWith(mockConfig.bucket.name, mockConfig.bucket.password);
+            expect(bucketMock).toHaveBeenCalledWith(mockConfig.bucket.name);
         });
     });
 
     describe('Couchbase Methods', () => {
         let couchbaseClient: CouchbaseClient;
 
-        beforeEach(() => {
-            (Cluster as jest.MockedClass<typeof Cluster>).mockImplementation(clusterMock);
-            couchbaseClient = new CouchbaseClient({} as any);
+        beforeEach(async () => {
+            jest.spyOn(couchbase, 'connect').mockResolvedValue(clusterMock as any);
+            couchbaseClient = await new CouchbaseClient({} as any);
 
             jest.spyOn(couchbaseClient, 'isConnected').mockReturnValue(true);
         });
@@ -98,7 +99,7 @@ describe('CouchbaseClient', () => {
 
             it('should return the value', async () => {
                 const mockReturnValue = { testObj: true };
-                jest.spyOn(couchbaseClient.collection, 'get').mockResolvedValue({ value: mockReturnValue });
+                jest.spyOn(couchbaseClient.collection, 'get').mockResolvedValue({ content: mockReturnValue, cas: 2 });
 
                 const result = await couchbaseClient.get('test');
 
@@ -149,17 +150,17 @@ describe('CouchbaseClient', () => {
                 const mockValue = { testObj: true };
                 const mockOptions = { ttl: () => 5 };
 
-                couchbaseClient.set(mockKey, mockValue, mockOptions);
+                await couchbaseClient.set(mockKey, mockValue, mockOptions);
 
                 expect(couchbaseClient.collection.insert).toMatchSnapshot();
             });
 
-            it('should not call set if not connected', () => {
+            it('should not call set if not connected', async () => {
                 jest.spyOn(couchbaseClient, 'isConnected').mockReturnValue(false);
                 const mockKey = 'test';
                 const mockValue = { testObj: true };
 
-                couchbaseClient.set(mockKey, mockValue);
+                await couchbaseClient.set(mockKey, mockValue);
 
                 expect(couchbaseClient.collection.insert).not.toHaveBeenCalled();
             });
@@ -229,9 +230,9 @@ describe('CouchbaseClient', () => {
     });
 
     describe('isConnected', () => {
-        it('should return the result of Array.some', () => {
-            (Cluster as jest.MockedClass<typeof Cluster>).mockImplementation(clusterMock);
-            const couchbaseClient: CouchbaseClient = new CouchbaseClient({} as any);
+        it('should return the result of Array.some', async () => {
+            jest.spyOn(couchbase, 'connect').mockResolvedValue(clusterMock as any);
+            const couchbaseClient: CouchbaseClient = await new CouchbaseClient({} as any);
 
             [
                 {
@@ -261,26 +262,26 @@ describe('CouchbaseClient', () => {
                 },
             ].forEach(({ bucket, collection, result }) => {
                 (couchbaseClient.bucket as any)._conn._connected = bucket;
-                couchbaseClient.collection._conn._connected = collection;
+                (couchbaseClient.collection as any)._conn._connected = collection;
 
                 expect(couchbaseClient.isConnected()).toEqual(result);
             });
         });
 
-        it('should default values to undefined if not connected', () => {
-            (Cluster as jest.MockedClass<typeof Cluster>).mockImplementation(clusterMock);
-            const couchbaseClient: CouchbaseClient = new CouchbaseClient({} as any);
+        it('should default values to undefined if not connected', async () => {
+            jest.spyOn(couchbase, 'connect').mockResolvedValue(clusterMock as any);
+            const couchbaseClient: CouchbaseClient = await new CouchbaseClient({} as any);
 
             delete (couchbaseClient.bucket as any)._conn;
-            delete couchbaseClient.collection._conn;
+            delete (couchbaseClient.collection as any)._conn;
 
             expect(couchbaseClient.isConnected()).toEqual(false);
         });
 
-        it('should default values if defaultCollection or bucket fails', () => {
+        it('should default values if defaultCollection or bucket fails', async () => {
             collectionMock.mockReturnValue(undefined);
-            (Cluster as jest.MockedClass<typeof Cluster>).mockImplementation(clusterMock);
-            const couchbaseClient: CouchbaseClient = new CouchbaseClient({} as any);
+            jest.spyOn(couchbase, 'connect').mockResolvedValue(clusterMock as any);
+            const couchbaseClient: CouchbaseClient = await new CouchbaseClient({} as any);
 
             expect(couchbaseClient.isConnected()).toEqual(false);
         });
@@ -289,9 +290,9 @@ describe('CouchbaseClient', () => {
     describe('getSetOptions', () => {
         let couchbaseClient: CouchbaseClient;
 
-        beforeEach(() => {
-            (Cluster as jest.MockedClass<typeof Cluster>).mockImplementation(clusterMock);
-            couchbaseClient = new CouchbaseClient({} as any);
+        beforeEach(async () => {
+            jest.spyOn(couchbase, 'connect').mockResolvedValue(clusterMock as any);
+            couchbaseClient = await new CouchbaseClient({} as any);
         });
 
         it('should call the ttl function if it exists', () => {
@@ -321,7 +322,7 @@ describe('CouchbaseClient', () => {
 
     describe('create', () => {
         it('should create a new CouchbaseClient with the passed in config', () => {
-            (Cluster as jest.MockedClass<typeof Cluster>).mockImplementation(clusterMock);
+            jest.spyOn(couchbase, 'connect').mockResolvedValue(clusterMock as any);
 
             const couchbaseClient = store.create({} as any);
 

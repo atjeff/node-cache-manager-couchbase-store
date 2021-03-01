@@ -1,27 +1,27 @@
 {
-  "compilerOptions": {
-      /* Basic Options */
-      "target": "es5",
-      "module": "commonjs",
-      "outDir": "./dist",
-      "lib": ["esnext"],
-      "declaration": true,
-      "allowJs": false,
-      "noEmitOnError": true,
-      "newLine": "lf",
-      "strict": true,
+    "compilerOptions": {
+        /* Basic Options */
+        "target": "es5",
+        "module": "commonjs",
+        "outDir": "./dist",
+        "lib": ["esnext"],
+        "declaration": true,
+        "allowJs": false,
+        "noEmitOnError": true,
+        "newLine": "lf",
+        "strict": true,
 
-      /* Build Options */
-      "incremental": true,
+        /* Build Options */
+        "incremental": true,
 
-      /* Module Resolution Options */
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "esModuleInterop": true,
-      "resolveJsonModule": true,
-      "moduleResolution": "node",
-      "forceConsistentCasingInFileNames": true
-  },
-  "include": ["./src/**/*.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.mock.ts"]
+        /* Module Resolution Options */
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "moduleResolution": "node",
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": ["./src/**/*.ts"],
+    "exclude": ["node_modules", "**/*.spec.ts", "**/*.mock.ts"]
 }
