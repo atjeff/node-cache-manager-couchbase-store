@@ -2,6 +2,7 @@ import { Store } from 'cache-manager';
 import { connect } from 'couchbase';
 import { InsertOptions, SetOptions, UpdateOptions } from './models/couchbase-operations.model';
 import { CouchbaseStoreConfig } from './models/couchbase-store-config.model';
+import { Cluster } from './types/cluster.model';
 
 export class CouchbaseClient implements Store {
     cluster?: Cluster;
@@ -13,7 +14,7 @@ export class CouchbaseClient implements Store {
         this.config = config;
 
         try {
-            connect(this.config?.url, this.config as any).then((cluster) => {
+            connect(this.config?.url, this.config).then((cluster) => {
                 this.cluster = cluster;
                 this.bucket = this.cluster.bucket(this.config?.bucket?.name);
                 this.collection = this.bucket.defaultCollection();
@@ -41,7 +42,7 @@ export class CouchbaseClient implements Store {
         }
     }
 
-    async del<T = any>(key: string): Promise<RemoveResult | void> {
+    async del(key: string): Promise<RemoveResult | void> {
         if (this.isConnected()) {
             return await this.collection.remove(key);
         }
