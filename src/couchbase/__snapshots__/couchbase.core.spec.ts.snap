@@ -41,7 +41,7 @@ exports[`CouchbaseClient Couchbase Methods set should call collection.set with t
         "testObj": true,
       },
       Object {
-        "timeout": 5,
+        "expiry": 5,
         "ttl": [Function],
       },
     ],
@@ -63,7 +63,7 @@ exports[`CouchbaseClient Couchbase Methods set should call getSetOptions with th
         "testObj": true,
       },
       Object {
-        "timeout": 5,
+        "expiry": 5,
         "ttl": 5,
       },
     ],
@@ -72,7 +72,7 @@ exports[`CouchbaseClient Couchbase Methods set should call getSetOptions with th
     Object {
       "type": "return",
       "value": Object {
-        "timeout": 5,
+        "expiry": 5,
         "ttl": 5,
       },
     },
@@ -89,7 +89,7 @@ exports[`CouchbaseClient Couchbase Methods upsert should call collection.upsert 
         "testObj": true,
       },
       Object {
-        "timeout": undefined,
+        "expiry": undefined,
       },
     ],
   ],
@@ -111,7 +111,7 @@ exports[`CouchbaseClient Couchbase Methods upsert should call collection.upsert 
         "testObj": true,
       },
       Object {
-        "timeout": 5,
+        "expiry": 5,
         "ttl": [Function],
       },
     ],
@@ -133,7 +133,7 @@ exports[`CouchbaseClient Couchbase Methods upsert should call getSetOptions with
         "testObj": true,
       },
       Object {
-        "timeout": 5,
+        "expiry": 5,
         "ttl": 5,
       },
     ],
@@ -142,7 +142,7 @@ exports[`CouchbaseClient Couchbase Methods upsert should call getSetOptions with
     Object {
       "type": "return",
       "value": Object {
-        "timeout": 5,
+        "expiry": 5,
         "ttl": 5,
       },
     },
@@ -152,7 +152,7 @@ exports[`CouchbaseClient Couchbase Methods upsert should call getSetOptions with
 
 exports[`CouchbaseClient getSetOptions should set the ttl function result if it exists 1`] = `
 Object {
-  "timeout": 5,
+  "expiry": 5,
   "ttl": [MockFunction] {
     "calls": Array [
       Array [
@@ -171,7 +171,7 @@ Object {
 
 exports[`CouchbaseClient getSetOptions should set the ttl value if it exists 1`] = `
 Object {
-  "timeout": 12,
+  "expiry": 12,
   "ttl": 12,
 }
 `;
