@@ -38,7 +38,7 @@ export class CouchbaseClient implements Store {
         if (this.isConnected()) {
             const insertOptions: InsertOptions = this.getSetOptions(value, options);
 
-            return await this.collection.insert(key, value, insertOptions);
+            return await this.collection.insert(key, value, insertOptions as any);
         }
     }
 
@@ -52,7 +52,7 @@ export class CouchbaseClient implements Store {
         if (this.isConnected()) {
             const insertOptions: InsertOptions = this.getSetOptions(value, options);
 
-            return this.collection.upsert(key, value, insertOptions);
+            return this.collection.upsert(key, value, insertOptions as any);
         }
     }
 
@@ -66,7 +66,7 @@ export class CouchbaseClient implements Store {
         // We want to allow value of zero
         const ttlFactory = typeof options?.ttl !== 'undefined' ? options.ttl : this.config.ttl;
 
-        insertOptions.timeout = typeof ttlFactory === 'function' ? ttlFactory(value) : ttlFactory;
+        insertOptions.expiry = typeof ttlFactory === 'function' ? ttlFactory(value) : ttlFactory;
 
         return insertOptions;
     }
