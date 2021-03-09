@@ -89,7 +89,7 @@ exports[`CouchbaseClient Couchbase Methods upsert should call collection.upsert 
         "testObj": true,
       },
       Object {
-        "expiry": undefined,
+        "expiry": NaN,
       },
     ],
   ],

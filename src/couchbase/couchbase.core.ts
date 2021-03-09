@@ -66,7 +66,7 @@ export class CouchbaseClient implements Store {
         // We want to allow value of zero
         const ttlFactory = typeof options?.ttl !== 'undefined' ? options.ttl : this.config.ttl;
 
-        insertOptions.expiry = typeof ttlFactory === 'function' ? ttlFactory(value) : ttlFactory;
+        insertOptions.expiry = Number(typeof ttlFactory === 'function' ? ttlFactory(value) : ttlFactory);
 
         return insertOptions;
     }
