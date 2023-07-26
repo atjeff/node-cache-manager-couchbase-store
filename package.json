@@ -8,9 +8,7 @@
     "scripts": {
         "dev": "tsc --watch",
         "build": "tsc",
-        "lint": "prettier --list-different 'src/**/*.ts'",
-        "format": "prettier --write 'src/**/*.ts'",
-        "test": "jest --runInBand"
+        "format": "prettier --write 'src/**/*.ts'"
     },
     "dependencies": {
         "couchbase": "^3.1.1"
