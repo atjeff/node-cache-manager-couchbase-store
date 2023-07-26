@@ -1,6 +1,6 @@
 {
     "name": "node-cache-manager-couchbase-store",
-    "version": "0.2.3",
+    "version": "0.3.0",
     "main": "index.js",
     "author": "atjeff",
     "license": "MIT",

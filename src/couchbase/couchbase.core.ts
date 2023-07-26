@@ -13,12 +13,16 @@ export class CouchbaseClient implements Store {
     constructor(config: CouchbaseStoreConfig) {
         this.config = config;
 
+        this.connect();
+    }
+
+    async connect(): Promise<void> {
         try {
-            connect(this.config?.url, this.config).then((cluster) => {
-                this.cluster = cluster;
-                this.bucket = this.cluster.bucket(this.config?.bucket?.name);
-                this.collection = this.bucket.defaultCollection();
-            });
+            const cluster = await connect(this.config?.url, this.config);
+
+            this.cluster = cluster;
+            this.bucket = this.cluster.bucket(this.config?.bucket?.name);
+            this.collection = this.bucket.defaultCollection();
         } catch (e) {
             console.log('Unable to connect to couchbase. ', e);
         }
