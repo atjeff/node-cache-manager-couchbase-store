@@ -1,5 +1,5 @@
 import { Store } from 'cache-manager';
-import { connect } from 'couchbase';
+import { Bucket, Collection, MutationResult, connect } from 'couchbase';
 import { InsertOptions, SetOptions, UpdateOptions } from './models/couchbase-operations.model';
 import { CouchbaseStoreConfig } from './models/couchbase-store-config.model';
 import { Cluster } from './types/cluster.model';
@@ -46,7 +46,7 @@ export class CouchbaseClient implements Store {
         }
     }
 
-    async del(key: string): Promise<RemoveResult | void> {
+    async del(key: string): Promise<MutationResult | void> {
         if (this.isConnected()) {
             return await this.collection.remove(key);
         }
